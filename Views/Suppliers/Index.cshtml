@@ -1,0 +1,113 @@
+﻿@model Project_Kerekes_Denisa_SADE.Models.ShopViewModels.SupplierIndexData
+@{
+    ViewData["Title"] = "Suppliers";
+}
+<h2>Suppliers</h2>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Supplier Name</th>
+            <th>Adress</th>
+            <th>Chocolates</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Suppliers)
+        {
+            string selectedRow = "";
+            if (item.ID == (int?)ViewData["SupplierID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.SupplierName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Adress)
+                </td>
+
+                <td>
+                    @{
+                        foreach (var chocolate in item.SuppliedChocolates)
+                        {
+                            @chocolate.Chocolate.ID @: @chocolate.Chocolate.Name <br />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Chocolates != null)
+{
+    <h3>Chocolates Supplied by Selected Supplier</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Taste</th>
+            <th>Weight</th>
+            <th>Price</th>
+        </tr>
+        @foreach (var item in Model.Chocolates)
+        {
+            string selectedRow = "";
+            if (item.ID == (int?)ViewData["ChocolateID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.ActionLink("Select", "Index", new { chocolateID = item.ID })
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Flavour
+                </td>
+                <td>
+                    @item.Weight
+                </td>
+                <td>
+                    @item.Price
+                </td>
+            </tr>
+        }
+    </table>
+}
+@if (Model.Orders != null)
+{
+    <h3>
+        Customers that have bought the Selected Chocolates
+    </h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Order Date</th>
+        </tr>
+        @foreach (var item in Model.Orders)
+        {
+            <tr>
+                <td>
+                    @item.Customer.Name
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+            </tr>
+        }
+    </table>
+}
